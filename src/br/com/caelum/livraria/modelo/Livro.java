@@ -20,7 +20,16 @@ public class Livro {
 	private double preco;
 	private String dataLancamento;
 
+	@ManyToMany
+	private List<Autor> autores = new ArrayList<Autor>();
 
+	public List<Autor> getAutores() {
+		return autores;
+	}
+
+	public void adicionaAutor(Autor autor) {
+		this.autores.add(autor);
+	}
 
 	public Livro() {
 	}
