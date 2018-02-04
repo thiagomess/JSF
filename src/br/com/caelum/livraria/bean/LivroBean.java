@@ -3,8 +3,13 @@ package br.com.caelum.livraria.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 
 import br.com.caelum.livraria.dao.DAO;
 import br.com.caelum.livraria.modelo.Autor;
@@ -49,7 +54,9 @@ public class LivroBean implements Serializable {
 		System.out.println("Gravando livro " + this.livro.getTitulo());
 
 		if (livro.getAutores().isEmpty()) {
-			throw new RuntimeException("Livro deve ter pelo menos um Autor.");
+			//throw new RuntimeException("Livro deve ter pelo menos um Autor.");
+			FacesContext.getCurrentInstance().addMessage("autor", new FacesMessage("Livro deve ter pelo menos um Autor."));// pegando a exception e jogando como mensagem na tela
+			return;
 		}
 
 		new DAO<Livro>(Livro.class).adiciona(this.livro);
@@ -59,6 +66,13 @@ public class LivroBean implements Serializable {
 	public void gravarAutor() {
 		Autor autor = new DAO<Autor>(Autor.class).buscaPorId(this.autorId);
 		this.livro.adicionaAutor(autor);
+	}
+	//Tratamento de validação manual do xhtml
+	public void comecaComDigitoUm(FacesContext fc, UIComponent component, Object value) throws ValidatorException {
+		String valor = value.toString();
+		if(!valor.startsWith("1")) {
+			throw new ValidatorException(new FacesMessage("ISBN Deveria começar com 1"));
+		}
 	}
 	
 	
