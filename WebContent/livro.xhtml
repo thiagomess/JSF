@@ -5,7 +5,7 @@
 <h:head />  <!-- PARA USO DO AJAX por precisar de JavaScript -->
 <h:body>
 	<h1>Novo Livro</h1>
-	<h:form>
+	<h:form id="livro">
 	<h:messages id="messages"/>	
 	
 		<fieldset>
@@ -59,7 +59,9 @@
 		    	<h:column >
 		    		<h:outputText value="#{autor.nome}"/>
 		    	</h:column>
-		    </h:dataTable>		
+		    </h:dataTable>
+<!--Fazendo redirecionamento para outra pagina mandando a pagina e a sua URL com o paramentro "?faces-redirect=true" -->
+		    <h:commandLink value="Cadastrar novo autor" action="autor?faces-redirect=true" immediate="true"/>		
 		</fieldset>
 
 		<h:commandButton value="Gravar" action="#{livroBean.gravar}">

@@ -75,6 +75,16 @@ public class LivroBean implements Serializable {
 		}
 	}
 	
+	/*O Redirecionamento para a pagina poderia ser feito tambem atraves da classe java, 
+	util quando se tem biredirecionamento de paginas com IF
+	Usa se na action no xhtml  "#{livroBean.formAutor}"
+	Explicacao> https://cursos.alura.com.br/course/jsf/task/1978
+	 
+	 public String formAutor() {
+	        
+		 return "autor?faces-redirect=true";
+	    	    
+	}*/
 	
 	
 
