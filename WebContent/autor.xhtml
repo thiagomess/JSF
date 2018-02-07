@@ -2,24 +2,65 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<h:body>
-		<h1>Novo Autor</h1>
+
+
+<ui:composition template="_template.xhtml">
+	<ui:define name="titulo">
+			Novo Autor
+		</ui:define>
+	<ui:define name="conteudo">
+
 		<h:form id="autor">
 			<fieldset>
 				<legend>Dados do Autor</legend>
 				<h:panelGrid columns="3">
 					<h:outputLabel value="Nome:" for="nome" />
 					<h:inputText id="nome" value="#{autorBean.autor.nome}"
-						required="true" requiredMessage="O nome do autor deve ter no mínimo 5 caracteres" validatorMessage="O nome do autor deve ter no mínimo 5 caracteres">
+						required="true"
+						requiredMessage="O nome do autor deve ter no mínimo 5 caracteres"
+						validatorMessage="O nome do autor deve ter no mínimo 5 caracteres">
 						<f:validateLength minimum="5" />
 					</h:inputText>
 					<h:message for="nome" />
 					<h:commandButton value="Gravar" action="#{autorBean.gravar}" />
+					<br />
+					<h:commandLink value="Adicionar livro"
+						action="livro?faces-redirect=true" immediate="true"></h:commandLink>
 				</h:panelGrid>
 			</fieldset>
 		</h:form>
-	</h:body>
+		<h:form>
+
+
+			<fieldset>
+				<legend>Autores Cadastrados</legend>
+				<h:dataTable id="tabelaDeAutores" value="#{autorBean.autores}"
+					var="autor">
+					<h:column>
+						<f:facet name="header">Autor</f:facet>
+						<h:outputText value="#{autor.nome}" />
+					</h:column>
+					<h:column>
+					<!-- OPÇÂO USANDO UMA CLASSE JAVA PARA CARREGAR AUTOR NO TEXTBOX -->  
+						<f:facet name="header">Alterar</f:facet>
+						<h:commandLink value="altera" action="#{autorBean.carregaAutor(autor)}"></h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Remover</f:facet>
+						<h:commandLink value="remove"
+							action="#{autorBean.removeAutor(autor)}"></h:commandLink>
+					</h:column>
+				</h:dataTable>
+			</fieldset>
+		</h:form>
+	</ui:define>
+	<ui:define name="rodape">
+		<br />
+		Cadastro de Autores - 
+		</ui:define>
+</ui:composition>
 
 </html>

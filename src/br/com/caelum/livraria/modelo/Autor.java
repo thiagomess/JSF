@@ -1,8 +1,12 @@
 package br.com.caelum.livraria.modelo;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import br.com.caelum.livraria.dao.DAO;
 
 @Entity
 public class Autor {
@@ -27,5 +31,12 @@ public class Autor {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public List<Autor> getAutores() {
+		return new DAO<Autor>(Autor.class).listaTodos();
+
+	}
+
+	
 
 }

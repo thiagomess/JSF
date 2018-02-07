@@ -3,7 +3,6 @@ package br.com.caelum.livraria.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -20,10 +19,9 @@ import br.com.caelum.livraria.modelo.Livro;
 public class LivroBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Livro livro = new Livro();
 	private Integer autorId;
-		
 
 	public Integer getAutorId() {
 		return autorId;
@@ -35,57 +33,86 @@ public class LivroBean implements Serializable {
 
 	public Livro getLivro() {
 		return livro;
+	}	
+
+	public void setLivro(Livro livro) {
+		this.livro = livro;
 	}
-	
-	public List<Autor> getAutores(){
+
+	public List<Autor> getAutores() {
 		return new DAO<Autor>(Autor.class).listaTodos();
-		
+
 	}
-	public List<Livro> getLivros(){
+
+	public List<Livro> getLivros() {
 		return new DAO<Livro>(Livro.class).listaTodos();
 	}
-	
 
-    public List<Autor> getAutoresDoLivro() {
-        return this.livro.getAutores();
-    }
+	public List<Autor> getAutoresDoLivro() {
+		return this.livro.getAutores();
+	}
 
 	public void gravar() {
 		System.out.println("Gravando livro " + this.livro.getTitulo());
 
 		if (livro.getAutores().isEmpty()) {
-			//throw new RuntimeException("Livro deve ter pelo menos um Autor.");
-			FacesContext.getCurrentInstance().addMessage("autor", new FacesMessage("Livro deve ter pelo menos um Autor."));// pegando a exception e jogando como mensagem na tela
+			// throw new RuntimeException("Livro deve ter pelo menos um Autor.");
+			FacesContext.getCurrentInstance().addMessage("autor",
+					new FacesMessage("Livro deve ter pelo menos um Autor."));// pegando a exception e jogando como
+																				// mensagem na tela
 			return;
 		}
+		//IF para incluir se for um livro novo ou atualizar os dados de um livro
+		if (this.livro.getId() == null) {
+			new DAO<Livro>(Livro.class).adiciona(this.livro);
 
-		new DAO<Livro>(Livro.class).adiciona(this.livro);
+		} else {                                           
+			new DAO<Livro>(Livro.class).atualiza(livro);
+		}
+
 		this.livro = new Livro();
 	}
-	
+// carregando livro nos textbox para alteração
+	public void carregar(Livro livro) {
+		System.out.println("Carregando livro: '" +livro.getTitulo() + "' para alteracao");
+		this.livro = livro;
+
+	}
+//metodo para remover o livro
+	public void remover(Livro livro) {
+		System.out.println("Removendo livro: " + livro.getTitulo());
+		new DAO<Livro>(Livro.class).remove(livro);
+	}
+
 	public void gravarAutor() {
 		Autor autor = new DAO<Autor>(Autor.class).buscaPorId(this.autorId);
 		this.livro.adicionaAutor(autor);
 	}
-	//Tratamento de validação manual do xhtml
+	
+	//Removendo autor do livro e usando o metodo na classe Livro.
+	public void removerAutorDoLivro(Autor autor) {
+		this.livro.removeAutor(autor);
+	}
+
+	// Tratamento de validação manual do xhtml
 	public void comecaComDigitoUm(FacesContext fc, UIComponent component, Object value) throws ValidatorException {
 		String valor = value.toString();
-		if(!valor.startsWith("1")) {
+		if (!valor.startsWith("1")) {
 			throw new ValidatorException(new FacesMessage("ISBN Deveria começar com 1"));
 		}
 	}
-	
-	/*O Redirecionamento para a pagina poderia ser feito tambem atraves da classe java, 
-	util quando se tem biredirecionamento de paginas com IF
-	Usa se na action no xhtml  "#{livroBean.formAutor}"
-	Explicacao> https://cursos.alura.com.br/course/jsf/task/1978
-	 
-	 public String formAutor() {
-	        
-		 return "autor?faces-redirect=true";
-	    	    
-	}*/
-	
-	
+
+	/*
+	 * O Redirecionamento para a pagina poderia ser feito tambem atraves da classe
+	 * java, util quando se tem biredirecionamento de paginas com IF Usa se na
+	 * action no xhtml "#{livroBean.formAutor}" Explicacao>
+	 * https://cursos.alura.com.br/course/jsf/task/1978
+	 * 
+	 * public String formAutor() {
+	 * 
+	 * return "autor?faces-redirect=true";
+	 * 
+	 * }
+	 */
 
 }
