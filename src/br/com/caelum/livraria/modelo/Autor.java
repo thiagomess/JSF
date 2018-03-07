@@ -15,6 +15,8 @@ public class Autor {
 	@GeneratedValue
 	private Integer id;
 	private String nome;
+	private String email;
+	
 
 	public String getNome() {
 		return nome;
@@ -35,6 +37,14 @@ public class Autor {
 	public List<Autor> getAutores() {
 		return new DAO<Autor>(Autor.class).listaTodos();
 
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	
