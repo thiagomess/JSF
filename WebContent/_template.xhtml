@@ -14,12 +14,20 @@
 		</h1>
 	</div>
 
+	<h:form rendered="#{usuarioLogado != null}" style="text-align:center;">
+		<h:outputText
+			value="Você está logado como: #{sessionScope['usuarioLogado'].email}" />
+		<br/>
+		<h:commandLink value="Logout" action="#{loginBean.efetuaLogout}"></h:commandLink>
+		
+	</h:form>
+	<br/>
 	<div id="conteudo">
 		<ui:insert name="conteudo"></ui:insert>
 	</div>
 	<div id="rodape">
 		<ui:insert name="rodape"></ui:insert>
-			Copyright 2017
+		Copyright 2017
 	</div>
 </h:body>
 </html>

@@ -11,7 +11,7 @@
 <ui:composition template="_template.xhtml">
 	<!-- passando parametro do ID na URL  -->
 	<f:metadata>
-		<f:viewParam name="livroId" value="#{livroBean.livroId}"/>
+		<f:viewParam name="livroId" value="#{livroBean.livroId}" />
 		<f:viewAction action="#{livroBean.carregarLivroPeloId}" if="#{param.livroId != null}"/>
 	</f:metadata>
  
@@ -62,8 +62,9 @@
 
 				</h:panelGrid>
 			</fieldset>
-
+			<br />
 			<fieldset>
+			
 				<legend>Dados do Autor</legend>
 				<h:outputLabel value="Selecione o autor: " for="autor" />
 				<h:selectOneMenu value="#{livroBean.autorId}" id="autor">
@@ -94,9 +95,11 @@
 				<!--** Usando AJAX com @form para submeter apenas o formulario, se quisse submeter a pagina inteira usaria @all  e o render o proprio form @form e o id da Tabela de livros, pois nao esta no mesmo form-->
 				<f:ajax execute="@form" render="@form :tabelaDeLivros:tabelaLivros" />
 			</h:commandButton>
+			<br />
 		</h:form>
 
 		<h:form id="tabelaDeLivros">
+		<br />
 			<fieldset>
 				<legend>Livros Cadastrados</legend>
 				<h:dataTable id="tabelaLivros" value="#{livroBean.livros}"
