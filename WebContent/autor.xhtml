@@ -54,42 +54,50 @@
 		</h:form>
 
 
-		////CONTINUAR AQUI https://cursos.alura.com.br/course/jsf-primefaces/task/15164
 
 		<h:form id="formTabelaDeAutores">
-		
-			<p:dataList value="#{autorBean.autores}" var="autor" type="ordered">
-			      <f:facet name="header" >
-			          Autores
-			      </f:facet>
-			      
-				<h:commandLink value="altera">
-				    <f:setPropertyActionListener value="#{autor}" target="#{autorBean.autor}" />
-				</h:commandLink>
-				
-				<h:commandLink value="remove" action="#{autorBean.remover(autor)}" />
-			
-			      #{autor.nome} - #{autor.email}
-			  </p:dataList>
-			<!-- <h:dataTable id="tabelaDeAutores" value="#{autorBean.autores}"
-				var="autor">
-				<h:column>
-					<f:facet name="header">Autor</f:facet>
-					<h:outputText value="#{autor.nome}" />
-				</h:column>
-				<h:column>
-					OPÇÂO USANDO UMA CLASSE JAVA PARA CARREGAR AUTOR NO TEXTBOX
-					<f:facet name="header">Alterar</f:facet>
-					<h:commandLink value="altera"
-						action="#{autorBean.carregaAutor(autor)}"></h:commandLink>
-				</h:column>
-				<h:column>
-					<f:facet name="header">Remover</f:facet>
-					<h:commandLink value="remove"
-						action="#{autorBean.removeAutor(autor)}"></h:commandLink>
-				</h:column>
-			</h:dataTable> -->
+
+			<p:dataList value="#{autorBean.autores}" var="autor"
+				type="definition">
+				<f:facet name="header">
+			            Autores
+			        </f:facet>
+
+
+        <p:commandButton style="margin:5px" icon="fa fa-fw fa-edit" update=":autor">
+            <f:setPropertyActionListener value="#{autor}" target="#{autorBean.autor}" />
+        </p:commandButton>
+
+        <p:commandButton icon="fa fa-fw fa-remove" action="#{autorBean.removeAutor(autor)}" 
+            update="@form :formTabelaDeAutores"/>
+			        
+			        #{autor.nome} - #{autor.email}
+			    </p:dataList>
+
+			<!-- 
+		 	<h:dataTable i'd="tabelaDeAutores" value="#{autorBean.autores}"
++				var="autor">
++				<h:column>
++					<f:facet name="header">Autor</f:facet>
++					<h:outputText value="#{autor.nome}" />
++				</h:column>
++				<h:column>
++					OPÇÂO USANDO UMA CLASSE JAVA PARA CARREGAR AUTOR NO TEXTBOX
++					<f:facet name="header">Alterar</f:facet>
++					<h:commandLink value="altera"
++						action="#{autorBean.carregaAutor(autor)}"></h:commandLink>
++				</h:column>
++				<h:column>
++					<f:facet name="header">Remover</f:facet>
++					<h:commandLink value="remove"
++						action="#{autorBean.removeAutor(autor)}"></h:commandLink>
++				</h:column>
++			</h:dataTable> -->
+
+
 		</h:form>
+
+
 	</ui:define>
 	<ui:define name="rodape">
 		<br />

@@ -28,7 +28,7 @@ public class LoginBean {
 		if (existe) {
 			System.out.println("login efetuado com sucesso: " + this.usuario.getEmail());
 			context.getExternalContext().getSessionMap().put("usuarioLogado", this.usuario);
-			return "livro?faces-redirect=true";
+			return "carousel?faces-redirect=true";
 		}
 		
 		context.getExternalContext().getFlash().setKeepMessages(true);

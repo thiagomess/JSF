@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head />
@@ -20,88 +21,83 @@
 	</ui:define>
 	<ui:define name="conteudo">
 		<h:form id="livro">
-			<h:messages id="messages" />
+			<p:messages id="messages" />
 
-			<fieldset>
-				<legend>Dados do Livro</legend>
+			<p:fieldset legend="Dados do Livro">
 				<h:panelGrid columns="2">
 
-					<h:outputLabel value="Titulo:" for="titulo" />
-					<h:inputText id="titulo" value="#{livroBean.livro.titulo}"
+					<p:outputLabel value="Titulo:" for="titulo" />
+					<p:inputText id="titulo" value="#{livroBean.livro.titulo}"
 						required="true" requiredMessage="Titulo obrigatório"
 						validatorMessage="Título não pode ser maior que 40 caracteres">
 						<f:validateLength maximum="40" />
 						<!--** USANDO AJAX PARA VALIDAR OS CAMPOS PEGANDO O ID DE MENSAGESNS  -->
 						<f:ajax event="blur" render="messages" />
-					</h:inputText>
-
-					<h:outputLabel value="ISBN:" for="isbn" />
-					<h:inputText id="isbn" value="#{livroBean.livro.isbn}"
-						validator="#{livroBean.comecaComDigitoUm}">
+					</p:inputText>
+					
+        
+					<p:outputLabel value="ISBN:" for="isbn" />
+					<p:inputMask id="isbn" value="#{livroBean.livro.isbn}"
+						validator="#{livroBean.comecaComDigitoUm}"  mask="999-9-99-999999-9">
 						<!--** USANDO AJAX PARA VALIDAR OS CAMPOS PEGANDO O ID DE MENSAGESNS  -->
 						<f:ajax event="keyup" render="messages" />
-					</h:inputText>
+					</p:inputMask>
 
-					<h:outputLabel value="Preço:" for="preco" />
-					<h:inputText id="preco" value="#{livroBean.livro.preco}"
-						validatorMessage="O Preço não pode ser menor que R$ 1.00 ou maior que R$ 1000.00">
+					<p:outputLabel value="Preço:" for="preco" />
+					
+					<p:inputNumber id="preco" symbol="R$ " value="#{livroBean.livro.preco}"   
+                               decimalSeparator="," thousandSeparator="." validatorMessage="O Preço não pode ser menor que R$ 1.00 ou maior que R$ 1000.00">
 
 						<f:validateDoubleRange minimum="1.00" maximum="1000.00" />
-						<f:convertNumber type="currenty" pattern="R$ 0.00"
-							currencySymbol="R$" locale="pt_BR" />
+                </p:inputNumber>  
 
-					</h:inputText>
-
-
-					<h:outputLabel value="Data de Lançamento:" for="dataLancamento" />
-					<h:inputText id="dataLancamento"
-						value="#{livroBean.livro.dataLancamento.time}">
-						<f:convertDateTime pattern="dd/MM/yyy HH:mm" />
+					<p:outputLabel value="Data de Lançamento:" for="dataLancamento" />
+					<p:calendar id="dataLancamento" value="#{livroBean.livro.dataLancamento.time}"  pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" mask="true" >
 						<!-- timeZone="America/Sao_Paulo" configurado no web.xml para pegar da hora do SO-->
-					</h:inputText>
-
+					</p:calendar>
+					 <h:outputScript library="js" name="locale-primefaces.js"/> <!-- Adicionado arquivo JS no webContent/resources/js para aparecer o calendario em portugues -->
 				</h:panelGrid>
-			</fieldset>
+			</p:fieldset>
 			<br />
-			<fieldset>
 			
-				<legend>Dados do Autor</legend>
-				<h:outputLabel value="Selecione o autor: " for="autor" />
-				<h:selectOneMenu value="#{livroBean.autorId}" id="autor">
+			<p:fieldset legend="Dados do Autor">
+			<p:panelGrid columns="4">
+			
+				<p:outputLabel value="Selecione o autor: " for="autor" />
+				<p:selectOneMenu value="#{livroBean.autorId}" id="autor" >
 					<f:selectItems value="#{livroBean.autores}" var="autor"
 						itemLabel="#{autor.nome}" itemValue="#{autor.id}" />
-				</h:selectOneMenu>
-				<h:commandButton value="Gravar autor"
-					action="#{livroBean.gravarAutor}">
+				</p:selectOneMenu>
+				
+				<!-- No ajax no primefaces o execute vira process e render vira update -->
+				<p:commandButton value="Gravar autor" action="#{livroBean.gravarAutor}" process="@this autor" update="tabelaAutores">
 					<!--** Usando AJAX pegando id do selectOneMenu e o render do id do dataTable-->
-					<f:ajax execute="autor" render="tabelaAutores" />
-				</h:commandButton>
-				<h:dataTable value="#{livroBean.autoresDoLivro}" var="autor"
-					id="tabelaAutores">
-					<h:column>
-						<h:outputText value="#{autor.nome}" />
-					</h:column>
-					<h:column>
-						<h:commandLink value="X"
-							action="#{livroBean.removerAutorDoLivro(autor)}"></h:commandLink>
-					</h:column>
-				</h:dataTable>
+					<!-- <f:ajax execute="autor" render="tabelaAutores" /> -->
+				</p:commandButton>
 				<!--Fazendo redirecionamento para outra pagina mandando a pagina e a sua URL com o paramentro "?faces-redirect=true" -->
-				<h:commandLink value="Cadastrar novo autor"
-					action="autor?faces-redirect=true" immediate="true" />
-			</fieldset>
+				<h:commandLink value="Cadastrar novo autor" action="autor?faces-redirect=true" immediate="true" />
+			</p:panelGrid>	
+			
+				<p:dataList value="#{livroBean.autoresDoLivro}" var="autor" id="tabelaAutores" emptyMessage="Nenhum autor selecionado" style="width: 743px">
+					<p:column>
+						<h:outputText value="#{autor.nome} " />
+					</p:column>
+					<p:column>
+						<p:commandButton icon="fa fa-fw fa-trash"  action="#{livroBean.removerAutorDoLivro(autor)}" 
+											process="@this" update="tabelaAutores"></p:commandButton>
+					</p:column>
+				</p:dataList>
+			</p:fieldset>
 
-			<h:commandButton value="Gravar" action="#{livroBean.gravar}">
+			<p:commandButton value="Gravar" action="#{livroBean.gravar}" process="@form" update="@form :tabelaDeLivros:tabelaLivros">
 				<!--** Usando AJAX com @form para submeter apenas o formulario, se quisse submeter a pagina inteira usaria @all  e o render o proprio form @form e o id da Tabela de livros, pois nao esta no mesmo form-->
-				<f:ajax execute="@form" render="@form :tabelaDeLivros:tabelaLivros" />
-			</h:commandButton>
-			<br />
+				<!-- <f:ajax execute="@form" render="@form :tabelaDeLivros:tabelaLivros" /> -->
+			</p:commandButton>
 		</h:form>
 
 		<h:form id="tabelaDeLivros">
 		<br />
-			<fieldset>
-				<legend>Livros Cadastrados</legend>
+			
 				<h:dataTable id="tabelaLivros" value="#{livroBean.livros}"
 					var="livro">
 					<h:column>
@@ -142,7 +138,7 @@
 						<h:commandLink value="remove" action="#{livroBean.remover(livro)}"></h:commandLink>
 					</h:column>
 				</h:dataTable>
-			</fieldset>
+			
 		</h:form>
 	</ui:define>
 	<ui:define name="rodape">

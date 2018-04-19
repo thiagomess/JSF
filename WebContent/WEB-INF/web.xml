@@ -29,5 +29,13 @@
         true
     </param-value>
 </context-param>
+<context-param>
+    <param-name>facelets.SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+</context-param>
+<context-param>
+    <param-name>primefaces.FONT_AWESOME</param-name>
+    <param-value>true</param-value>
+</context-param>
 
 </web-app>
