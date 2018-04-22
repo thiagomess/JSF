@@ -23,10 +23,11 @@ public class LivroBean implements Serializable {
 	private Livro livro = new Livro();
 	private Integer autorId;
 	private Integer livroId;
-	
+	private List<Livro> livros;
+
 	public void carregarLivroPeloId() {
 		this.livro = new DAO<Livro>(Livro.class).buscaPorId(livroId);
-	}	
+	}
 
 	public List<Autor> getAutores() {
 		return new DAO<Autor>(Autor.class).listaTodos();
@@ -34,7 +35,13 @@ public class LivroBean implements Serializable {
 	}
 
 	public List<Livro> getLivros() {
-		return new DAO<Livro>(Livro.class).listaTodos();
+
+		DAO<Livro> dao = new DAO<Livro>(Livro.class);
+		if (this.livros == null) {
+			this.livros = dao.listaTodos();
+		}
+
+		return livros;
 	}
 
 	public List<Autor> getAutoresDoLivro() {
@@ -52,11 +59,13 @@ public class LivroBean implements Serializable {
 			return;
 		}
 		// IF para incluir se for um livro novo ou atualizar os dados de um livro
+		DAO<Livro> dao = new DAO<Livro>(Livro.class);
 		if (this.livro.getId() == null) {
-			new DAO<Livro>(Livro.class).adiciona(this.livro);
+			dao.adiciona(this.livro);
+			this.livros = dao.listaTodos();
 
 		} else {
-			new DAO<Livro>(Livro.class).atualiza(livro);
+			dao.atualiza(livro);
 		}
 
 		this.livro = new Livro();
@@ -100,7 +109,7 @@ public class LivroBean implements Serializable {
 	public void setLivroId(Integer livroId) {
 		this.livroId = livroId;
 	}
-	
+
 	public Integer getAutorId() {
 		return autorId;
 	}
@@ -115,6 +124,10 @@ public class LivroBean implements Serializable {
 
 	public void setLivro(Livro livro) {
 		this.livro = livro;
+	}
+
+	public void setLivros(List<Livro> livros) {
+		this.livros = livros;
 	}
 
 	/*
