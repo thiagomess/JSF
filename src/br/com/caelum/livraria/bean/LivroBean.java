@@ -14,6 +14,7 @@ import javax.faces.validator.ValidatorException;
 import br.com.caelum.livraria.dao.DAO;
 import br.com.caelum.livraria.modelo.Autor;
 import br.com.caelum.livraria.modelo.Livro;
+import br.com.caelum.livraria.modelo.LivroDataModel;
 
 @ManagedBean
 @ViewScoped
@@ -25,6 +26,8 @@ public class LivroBean implements Serializable {
 	private Integer autorId;
 	private Integer livroId;
 	private List<Livro> livros;
+	
+	 private LivroDataModel livroDataModel = new LivroDataModel();
 
 	public void carregarLivroPeloId() {
 		this.livro = new DAO<Livro>(Livro.class).buscaPorId(livroId);
@@ -161,6 +164,14 @@ public class LivroBean implements Serializable {
 
 	public void setLivros(List<Livro> livros) {
 		this.livros = livros;
+	}
+
+	public LivroDataModel getLivroDataModel() {
+		return livroDataModel;
+	}
+
+	public void setLivroDataModel(LivroDataModel livroDataModel) {
+		this.livroDataModel = livroDataModel;
 	}
 
 	/*

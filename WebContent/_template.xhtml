@@ -4,7 +4,6 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-
 <h:head />
 
 <h:body>
@@ -15,11 +14,24 @@
 		</h1>
 	</div>
 
-	<h:form rendered="#{usuarioLogado != null}" style="text-align:center;">
-		<h:outputText
-			value="Você está logado como: #{sessionScope['usuarioLogado'].email}" />
-		<br/>
-		<p:commandButton value="Logout" action="#{loginBean.efetuaLogout}" ></p:commandButton>
+	  <p:growl id="messages" autoUpdate="true"/>
+
+	<h:form rendered="#{usuarioLogado != null}">
+	
+		<p:menubar>
+		        <p:menuitem  value="Home"  action="carousel?faces-redirect=true"    icon="fa fa-home"/>
+		        <p:menuitem  value="Livro"  action="livro?faces-redirect=true"   icon="fa fa-book"/>
+		        <p:menuitem  value="Autor" action="autor?faces-redirect=true"   icon="fa fa-fw fa-edit"/>
+		  		<p:menuitem  value="Ring" action="ring?faces-redirect=true"    icon="ui-icon-disk"/>
+		  
+		 
+		        <f:facet name="options">
+		            <h:outputText value="Você está logado como: #{sessionScope['usuarioLogado'].email} " style="text-align:center;" />
+		            <p:commandButton  value="Logout" action="#{loginBean.efetuaLogout}" icon="ui-icon-extlink" />
+		        </f:facet>
+		</p:menubar>
+			    <br/>
+		
 		
 	</h:form>
 	<br/>
