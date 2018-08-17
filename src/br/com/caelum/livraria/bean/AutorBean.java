@@ -2,8 +2,10 @@ package br.com.caelum.livraria.bean;
 
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import br.com.caelum.livraria.dao.DAO;
 import br.com.caelum.livraria.modelo.Autor;
@@ -36,7 +38,13 @@ public class AutorBean {
 
 	// Removendo Autor do Banco
 	public void removeAutor(Autor autor) {
-		new DAO<Autor>(Autor.class).remove(autor);
+		try {
+			new DAO<Autor>(Autor.class).remove(autor);
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+					"Não é possível excluir um autor com um livro vinculado", ""));
+		}
+		
 	}
 
 	public void carregaAutor(Autor autor) {

@@ -1,10 +1,7 @@
 package br.com.caelum.livraria.modelo;
 
-import java.util.List;
-
 import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortOrder;
-import com.sun.javafx.collections.MappingChange.Map;
+
 import br.com.caelum.livraria.dao.DAO;
 
 public class LivroDataModel extends LazyDataModel<Livro> {

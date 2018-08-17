@@ -85,7 +85,9 @@ public class LivroBean implements Serializable {
 	// metodo para remover o livro
 	public void remover(Livro livro) {
 		System.out.println("Removendo livro: " + livro.getTitulo());
-		new DAO<Livro>(Livro.class).remove(livro);
+		DAO<Livro> dao = new DAO<Livro>(Livro.class);
+		dao.remove(livro);
+		this.livros = dao.listaTodos();
 	}
 
 	public void gravarAutor() {

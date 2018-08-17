@@ -87,11 +87,17 @@
 					</p:column>
 				</p:dataList>
 			</p:fieldset>
+			
+			<br />
+			<p:fieldset style="text-align:center;">
+				<p:commandButton value="Gravar Livro" action="#{livroBean.gravar}" process="@form" 
+						update="@form  :tabelaDeLivros:tabelaLivros"  />
+			</p:fieldset>
 
-			<p:commandButton value="Gravar" action="#{livroBean.gravar}" process="@form" update="@form :tabelaDeLivros:tabelaLivros">
-				<!--** Usando AJAX com @form para submeter apenas o formulario, se quisse submeter a pagina inteira usaria @all  e o render o proprio form @form e o id da Tabela de livros, pois nao esta no mesmo form-->
-				<!-- <f:ajax execute="@form" render="@form :tabelaDeLivros:tabelaLivros" /> -->
-			</p:commandButton>
+<!-- 			<p:commandButton value="Gravar" action="#{livroBean.gravar}" process="@form" update="@form :tabelaDeLivros:tabelaLivros">
+				** Usando AJAX com @form para submeter apenas o formulario, se quisse submeter a pagina inteira usaria @all  e o render o proprio form @form e o id da Tabela de livros, pois nao esta no mesmo form
+				<f:ajax execute="@form" render="@form :tabelaDeLivros:tabelaLivros" />
+			</p:commandButton> -->
 		</h:form>
 
 		<h:form id="tabelaDeLivros">
@@ -126,15 +132,17 @@
 					<!--CARREGANDO DADOS PARA O TEXT BOX E PERMITE ALTERAÇÂO  -->
 					<p:column>
 						<f:facet name="header">Alterar</f:facet>
-						<h:commandLink value="Alterar">
+						
+						 <p:commandButton style="margin:5px" icon="fa fa-fw fa-edit" update=":livro">
 							<f:setPropertyActionListener target="#{livroBean.livro}" value="#{livro}" /> <!-- esta tag  -->
-						</h:commandLink>
+						</p:commandButton>
 					</p:column>
 					<!--EFETUA REMOÇÃO DO LIVRO  -->
 					<p:column  >
 						<f:facet name="header">Remover</f:facet>
-						<h:commandLink value="remove" action="#{livroBean.remover(livro)}"></h:commandLink>
-					</p:column>
+							 <p:commandButton style="margin:5px" icon="fa fa-fw fa-remove" action="#{livroBean.remover(livro)}" update="tabelaDeLivros"></p:commandButton> 
+<!-- 						<p:commandButton update="@form" process="@this"  actionListener="#{livroBean.remover(livro)}" icon="fa fa-fw fa-remove" />
+ -->					</p:column>
 				</p:dataTable>
 			
 		</h:form>
