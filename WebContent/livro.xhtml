@@ -133,14 +133,14 @@
 					<p:column>
 						<f:facet name="header">Alterar</f:facet>
 						
-						 <p:commandButton style="margin:5px" icon="fa fa-fw fa-edit" update=":livro">
+						 <p:commandButton style="margin:10px" icon="fa fa-fw fa-edit" update=":livro">
 							<f:setPropertyActionListener target="#{livroBean.livro}" value="#{livro}" /> <!-- esta tag  -->
 						</p:commandButton>
 					</p:column>
 					<!--EFETUA REMOÇÃO DO LIVRO  -->
 					<p:column  >
 						<f:facet name="header">Remover</f:facet>
-							 <p:commandButton style="margin:5px" icon="fa fa-fw fa-remove" action="#{livroBean.remover(livro)}" update="tabelaDeLivros"></p:commandButton> 
+							 <p:commandButton style="margin:10px" icon="fa fa-fw fa-trash" action="#{livroBean.remover(livro)}" update="tabelaDeLivros"></p:commandButton> 
 <!-- 						<p:commandButton update="@form" process="@this"  actionListener="#{livroBean.remover(livro)}" icon="fa fa-fw fa-remove" />
  -->					</p:column>
 				</p:dataTable>
