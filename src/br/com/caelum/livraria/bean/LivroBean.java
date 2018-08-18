@@ -16,10 +16,10 @@ import br.com.caelum.livraria.modelo.Autor;
 import br.com.caelum.livraria.modelo.Livro;
 import br.com.caelum.livraria.modelo.LivroDataModel;
 
-/*@ManagedBean
+/*@ManagedBean //Era usado para gerenciar pelo o JSF
 @ViewScoped*/
-@Named
-@ViewScoped
+@Named //usado para o CDI gerenciar o projeto
+@ViewScoped// Tag do pacote para o CDI javax.faces.view.ViewScoped
 public class LivroBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;

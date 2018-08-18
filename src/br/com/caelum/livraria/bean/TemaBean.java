@@ -1,11 +1,17 @@
 package br.com.caelum.livraria.bean;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import java.io.Serializable;
 
-@ManagedBean
-@SessionScoped
-public class TemaBean {
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+
+/*@ManagedBean //Era usado para gerenciar pelo o JSF
+@ViewScoped*/
+@Named //usado para o CDI gerenciar o projeto
+@ViewScoped //javax.faces.view.ViewScoped
+public class TemaBean implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private String tema = "aristo"; //tema padrão
 
