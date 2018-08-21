@@ -1,6 +1,13 @@
 package br.com.caelum.livraria.modelo;
 
-public class Venda {
+import java.io.Serializable;
+
+public class Venda implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private Livro livro;
 	private Integer quantidade;

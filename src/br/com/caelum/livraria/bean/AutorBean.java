@@ -6,9 +6,10 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.com.caelum.livraria.dao.DAO;
+import br.com.caelum.livraria.dao.AutorDao;
 import br.com.caelum.livraria.modelo.Autor;
 import br.com.caelum.livraria.util.RedirectView;
 
@@ -20,9 +21,11 @@ public class AutorBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	@Inject //Injeta o dao nessa classe ao inves de instanciarmos manualmente (new AutorDao();)
+	private AutorDao dao;
+	
 	private Autor autor = new Autor();
 	private Integer autorId;
-
 	
 	public Autor getAutor() {
 		return autor;
@@ -33,18 +36,18 @@ public class AutorBean implements Serializable {
 	}
 	
 	public void carregarAutorPeloId() {
-		this.autor = new DAO<Autor>(Autor.class).buscaPorId(autorId);
+		this.autor = this.dao.buscaPorId(autorId);
 	}
 
 	public List<Autor> getAutores() {
-		return new DAO<Autor>(Autor.class).listaTodos();
+		return this.dao.listaTodos();
 
 	}
 
 	// Removendo Autor do Banco
 	public void removeAutor(Autor autor) {
 		try {
-			new DAO<Autor>(Autor.class).remove(autor);
+			this.dao.remove(autor);
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, 
 					"Não é possível excluir um autor com um livro vinculado", ""));
@@ -61,9 +64,9 @@ public class AutorBean implements Serializable {
 		System.out.println("Gravando autor " + this.autor.getNome());
 
 		if (this.autor == null) {
-			new DAO<Autor>(Autor.class).adiciona(this.autor);
+			this.dao.adiciona(this.autor);
 		} else {
-			new DAO<Autor>(Autor.class).atualiza(autor);
+			this.dao.atualiza(autor);
 		}
 		this.autor = new Autor();
 		return new RedirectView("livro");
@@ -84,7 +87,7 @@ public class AutorBean implements Serializable {
 	 * public ForwardView gravar() { System.out.println("Gravando autor " +
 	 * this.autor.getNome());
 	 * 
-	 * new DAO<Autor>(Autor.class).adiciona(this.autor); this.autor = new Autor();
+	 * this.dao.adiciona(this.autor); this.autor = new Autor();
 	 * return new ForwardView("livro"); }
 	 */
 }
