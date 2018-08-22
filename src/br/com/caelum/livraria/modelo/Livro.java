@@ -1,9 +1,9 @@
 package br.com.caelum.livraria.modelo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,9 +32,9 @@ public class Livro implements Serializable {
 	private Calendar dataLancamento = Calendar.getInstance();
 
 	@ManyToMany(fetch=FetchType.EAGER)
-	private List<Autor> autores = new ArrayList<Autor>();
+	private Set<Autor> autores = new HashSet<Autor>(); //Não permite ser adicionado autor repetido, utiliza o metodo HashCode e Equals da classe model
 
-	public List<Autor> getAutores() {
+	public Set<Autor> getAutores() {
 		return autores;
 	}
 
@@ -90,7 +90,5 @@ public class Livro implements Serializable {
 		this.autores.remove(autor);
 		
 	}
-
-
 
 }
