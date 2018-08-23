@@ -17,6 +17,7 @@ import br.com.caelum.livraria.dao.AutorDao;
 import br.com.caelum.livraria.dao.LivroDao;
 import br.com.caelum.livraria.modelo.Autor;
 import br.com.caelum.livraria.modelo.Livro;
+import br.com.caelum.livraria.tx.Transacional;
 
 /*@ManagedBean //Era usado para gerenciar pelo o JSF
 @ViewScoped*/
@@ -36,20 +37,18 @@ public class LivroBean implements Serializable {
 	private Integer livroId;
 	private List<Livro> livros;
 	
-	
-	
-
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void carregarLivroPeloId() {
 		this.livro = this.livroDao.buscaPorId(livroId);
 	}
-
+	
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public List<Autor> getAutores() {
 		return  this.autorDao.listaTodos();
-
 	}
-
+	
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public List<Livro> getLivros() {
-
 		if (this.livros == null) {
 			this.livros = livroDao.listaTodos();
 		}
@@ -60,7 +59,8 @@ public class LivroBean implements Serializable {
 	public Set<Autor> getAutoresDoLivro() {
 		return this.livro.getAutores();
 	}
-
+	
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void gravar() {
 		System.out.println("Gravando livro " + this.livro.getTitulo());
 
@@ -91,15 +91,19 @@ public class LivroBean implements Serializable {
 	}
 
 	// metodo para remover o livro
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void remover(Livro livro) {
 		System.out.println("Removendo livro: " + livro.getTitulo());
 		livroDao.remove(livro);
 		this.livros = livroDao.listaTodos();
 	}
-
+	
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void gravarAutor() {
 		Autor autor = this.autorDao.buscaPorId(this.autorId);
 		this.livro.adicionaAutor(autor);
+
+		
 	}
 
 	// Removendo autor do livro e usando o metodo na classe Livro.

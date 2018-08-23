@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import javax.inject.Named;
 
 import br.com.caelum.livraria.dao.AutorDao;
 import br.com.caelum.livraria.modelo.Autor;
+import br.com.caelum.livraria.tx.Transacional;
 import br.com.caelum.livraria.util.RedirectView;
 
 /*@ManagedBean //Era usado para gerenciar pelo o JSF
@@ -26,6 +28,10 @@ public class AutorBean implements Serializable {
 	
 	private Autor autor = new Autor();
 	private Integer autorId;
+
+	private String mensagem;
+
+	private Severity tipoErro;
 	
 	public Autor getAutor() {
 		return autor;
@@ -35,31 +41,41 @@ public class AutorBean implements Serializable {
 		this.autor = autor;
 	}
 	
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void carregarAutorPeloId() {
 		this.autor = this.dao.buscaPorId(autorId);
 	}
-
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public List<Autor> getAutores() {
 		return this.dao.listaTodos();
 
 	}
 
 	// Removendo Autor do Banco
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void removeAutor(Autor autor) {
 		try {
 			this.dao.remove(autor);
+			mensagem = "Autor removido com sucesso";
+			tipoErro = FacesMessage.SEVERITY_INFO;
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-					"Não é possível excluir um autor com um livro vinculado", ""));
+
+			mensagem = "Não é possível excluir autor com um livro vinculado";
+			tipoErro = FacesMessage.SEVERITY_ERROR;
 		}
-		
+
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(tipoErro, 
+				mensagem, ""));
+
+
 	}
 
 	public void carregaAutor(Autor autor) {
 		System.out.println("carregando autor: " + autor.getNome());
 		this.autor = autor;
 	}
-
+	
+	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public RedirectView gravar() {
 		System.out.println("Gravando autor " + this.autor.getNome());
 

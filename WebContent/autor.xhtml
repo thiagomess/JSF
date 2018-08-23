@@ -20,7 +20,7 @@
 		<p:outputPanel>	Novo Autor</p:outputPanel>
 	</ui:define>
 	<ui:define name="conteudo">
-
+		
 		<h:form id="autor">
 			<p:fieldset legend="Dados do Autor">
 				<h:panelGrid columns="3">
@@ -69,7 +69,7 @@
         </p:commandButton>
 
         <p:commandButton icon="fa fa-fw fa-remove" action="#{autorBean.removeAutor(autor)}" 
-            update="@form :formTabelaDeAutores"/>
+            update="@form :formTabelaDeAutores" />
 			        
 			        #{autor.nome} - #{autor.email}
 			    </p:dataList>

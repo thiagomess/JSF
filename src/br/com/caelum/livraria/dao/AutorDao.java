@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import br.com.caelum.livraria.modelo.Autor;
+import br.com.caelum.livraria.tx.Log;
 
 public class AutorDao implements Serializable {
 	
@@ -23,27 +24,27 @@ public class AutorDao implements Serializable {
 		System.out.println("Criando AutorDao ");
 	}
 
-
+	@Log
 	public void adiciona(Autor t) {
 		dao.adiciona(t);
 	}
 
-
+	@Log
 	public void remove(Autor t) {
 		dao.remove(t);
 	}
 
-
+	@Log
 	public void atualiza(Autor t) {
 		dao.atualiza(t);
 	}
 
-
+	@Log
 	public List<Autor> listaTodos() {
 		return dao.listaTodos();
 	}
 
-
+	@Log
 	public Autor buscaPorId(Integer id) {
 		return dao.buscaPorId(id);
 	}
