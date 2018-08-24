@@ -1,9 +1,7 @@
 package br.com.caelum.livraria.bean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -15,9 +13,9 @@ import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 
-import br.com.caelum.livraria.dao.LivroDao;
-import br.com.caelum.livraria.modelo.Livro;
+import br.com.caelum.livraria.dao.VendaDao;
 import br.com.caelum.livraria.modelo.Venda;
+import br.com.caelum.livraria.tx.Transacional;
 
 /*@ManagedBean //Era usado para gerenciar pelo o JSF
 @ViewScoped*/
@@ -30,14 +28,12 @@ public class VendasBean implements Serializable{
 	private BarChartModel vendasModel;
 	
 	@Inject
-	private LivroDao dao;
+	private VendaDao dao;
 
 	@PostConstruct
 	public void init() {
 		createVendasModel();
 	}
-
-
 
 	private void createVendasModel() {
 		vendasModel = initVendasModel();
@@ -59,8 +55,8 @@ public class VendasBean implements Serializable{
 		BarChartModel model = new BarChartModel();
 
 		ChartSeries vendaSeries2015 = new ChartSeries();
-		List<Venda> vendas = getVendas(1234);
-		vendaSeries2015.setLabel("2015");
+		List<Venda> vendas = getVendas(2016);
+		vendaSeries2015.setLabel("2016");
 
 		for (Venda venda : vendas) {
 
@@ -71,8 +67,8 @@ public class VendasBean implements Serializable{
 		model.addSeries(vendaSeries2015);
 
 		ChartSeries vendaSeries2016 = new ChartSeries();
-		vendas = getVendas(4321);
-		vendaSeries2016.setLabel("2016");
+		vendas = getVendas(2017);
+		vendaSeries2016.setLabel("2017");
 
 		for (Venda venda : vendas) {
 
@@ -84,20 +80,13 @@ public class VendasBean implements Serializable{
 
 		return model;
 	}
-
-	public List<Venda> getVendas(long seed) {
-
-		List<Livro> livros = this.dao.listaTodos();
-		List<Venda> vendas = new ArrayList<Venda>();
-		Random random = new Random(seed);
-
-		for (Livro livro : livros) {
-			Integer quantidade = random.nextInt(500);
-
-			vendas.add(new Venda(livro, quantidade));
-		}
-
-		return vendas;
+	
+	@Transacional
+	public List<Venda> getVendas(Integer ano) {
+		
+		List<Venda> buscaVendas = this.dao.buscaVendas(ano);
+		
+		return buscaVendas;
 	}
 
 	public BarChartModel getVendasModel() {

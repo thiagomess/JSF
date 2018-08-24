@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.caelum.livraria.dao.UsuarioDao;
@@ -19,6 +20,12 @@ public class LoginBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Usuario usuario = new Usuario();
+	
+	@Inject
+	private UsuarioDao dao;
+	
+	@Inject
+	private FacesContext context; // FacesContext agora é criado pela JsfUtil
 
 	public Usuario getUsuario() {
 		return usuario;
@@ -28,8 +35,7 @@ public class LoginBean implements Serializable {
 		
 		System.out.println("login inválido: " + this.usuario.getEmail());
 
-		FacesContext context = FacesContext.getCurrentInstance();
-		boolean existe = new UsuarioDao().existe(this.usuario);
+		boolean existe = dao.existe(this.usuario);
 		
 		if (existe) {
 			System.out.println("login efetuado com sucesso: " + this.usuario.getEmail());

@@ -33,13 +33,9 @@ public class AutorBean implements Serializable {
 
 	private Severity tipoErro;
 	
-	public Autor getAutor() {
-		return autor;
-	}
-
-	public void setAutor(Autor autor) {
-		this.autor = autor;
-	}
+	@Inject
+	private FacesContext context; // FacesContext agora é criado pela JsfUtil
+	
 	
 	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void carregarAutorPeloId() {
@@ -64,7 +60,7 @@ public class AutorBean implements Serializable {
 			tipoErro = FacesMessage.SEVERITY_ERROR;
 		}
 
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(tipoErro, 
+		context.addMessage(null, new FacesMessage(tipoErro, 
 				mensagem, ""));
 
 
@@ -94,6 +90,14 @@ public class AutorBean implements Serializable {
 
 	public void setAutorId(Integer autorId) {
 		this.autorId = autorId;
+	}
+	
+	public Autor getAutor() {
+		return autor;
+	}
+
+	public void setAutor(Autor autor) {
+		this.autor = autor;
 	}
 
 	/*

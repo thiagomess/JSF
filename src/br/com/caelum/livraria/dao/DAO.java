@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import br.com.caelum.livraria.modelo.Venda;
+
 public class DAO<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -75,6 +77,12 @@ public class DAO<T> implements Serializable {
 		long result = (Long) em.createQuery("select count(n) from " + classe.getSimpleName() + " n")
 				.getSingleResult();
 		return (int) result;
+	}
+
+	public List<Venda> buscaVendas(Integer ano) {
+		List<Venda> resultado = em.createQuery("select v from Venda v where v.ano = :pAno", Venda.class).setParameter("pAno", ano).getResultList();
+		
+		return resultado;
 	}
 
 }

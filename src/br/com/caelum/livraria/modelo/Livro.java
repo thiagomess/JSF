@@ -30,8 +30,7 @@ public class Livro implements Serializable {
 	private double preco;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar dataLancamento = Calendar.getInstance();
-
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany
 	private Set<Autor> autores = new HashSet<Autor>(); //Não permite ser adicionado autor repetido, utiliza o metodo HashCode e Equals da classe model
 
 	public Set<Autor> getAutores() {

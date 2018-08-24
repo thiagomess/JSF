@@ -36,6 +36,8 @@ public class LivroBean implements Serializable {
 	private Integer autorId;
 	private Integer livroId;
 	private List<Livro> livros;
+	@Inject
+	FacesContext context; // FacesContext agora é criado pela JsfUtil
 	
 	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void carregarLivroPeloId() {
@@ -66,7 +68,7 @@ public class LivroBean implements Serializable {
 
 		if (livro.getAutores().isEmpty()) {
 			// throw new RuntimeException("Livro deve ter pelo menos um Autor.");
-			FacesContext.getCurrentInstance().addMessage("autor",
+			context.addMessage("autor",
 					new FacesMessage("Livro deve ter pelo menos um Autor."));// pegando a exception e jogando como
 																				// mensagem na tela
 			return;
@@ -86,7 +88,7 @@ public class LivroBean implements Serializable {
 	// carregando livro nos textbox para alteração
 	public void carregar(Livro livro) {
 		System.out.println("Carregando livro: '" + livro.getTitulo() + "' para alteracao");
-		this.livro = livro;
+		this.livro = this.livroDao.buscaPorId(livro.getId());
 
 	}
 
@@ -121,35 +123,35 @@ public class LivroBean implements Serializable {
 	
 	public boolean precoEhMenor(Object valorColuna, Object filtroDigitado, Locale locale) { // java.util.Locale
 
-        //tirando espaços do filtro
-        String textoDigitado = (filtroDigitado == null) ? null : filtroDigitado.toString().trim();
+		//tirando espaços do filtro
+		String textoDigitado = (filtroDigitado == null) ? null : filtroDigitado.toString().trim();
 
-        System.out.println("Filtrando pelo " + textoDigitado + ", Valor do elemento: " + valorColuna);
+		System.out.println("Filtrando pelo " + textoDigitado + ", Valor do elemento: " + valorColuna);
 
-        // o filtro é nulo ou vazio?
-        if (textoDigitado == null || textoDigitado.equals("")) {
-            return true;
-        }
+		// o filtro é nulo ou vazio?
+		if (textoDigitado == null || textoDigitado.equals("")) {
+			return true;
+		}
 
-        // elemento da tabela é nulo?
-        if (valorColuna == null) {
-            return false;
-        }
+		// elemento da tabela é nulo?
+		if (valorColuna == null) {
+			return false;
+		}
 
-        try {
-            // fazendo o parsing do filtro para converter para Double
-            Double precoDigitado = Double.valueOf(textoDigitado);
-            Double precoColuna = (Double) valorColuna;
+		try {
+			// fazendo o parsing do filtro para converter para Double
+			Double precoDigitado = Double.valueOf(textoDigitado);
+			Double precoColuna = (Double) valorColuna;
 
-            // comparando os valores, compareTo devolve um valor negativo se o value é menor do que o filtro
-            return precoColuna.compareTo(precoDigitado) < 0;
+			// comparando os valores, compareTo devolve um valor negativo se o value é menor do que o filtro
+			return precoColuna.compareTo(precoDigitado) < 0;
 
-        } catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 
-            // usuario nao digitou um numero
-            return false;
-        }
-}
+			// usuario nao digitou um numero
+			return false;
+		}
+	}
 
 	public Integer getLivroId() {
 		return livroId;
