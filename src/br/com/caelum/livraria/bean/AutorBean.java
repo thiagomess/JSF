@@ -12,6 +12,7 @@ import javax.inject.Named;
 
 import br.com.caelum.livraria.dao.AutorDao;
 import br.com.caelum.livraria.modelo.Autor;
+import br.com.caelum.livraria.modelo.Livro;
 import br.com.caelum.livraria.tx.Transacional;
 import br.com.caelum.livraria.util.RedirectView;
 
@@ -28,9 +29,7 @@ public class AutorBean implements Serializable {
 	
 	private Autor autor = new Autor();
 	private Integer autorId;
-
 	private String mensagem;
-
 	private Severity tipoErro;
 	
 	@Inject
@@ -50,20 +49,18 @@ public class AutorBean implements Serializable {
 	// Removendo Autor do Banco
 	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void removeAutor(Autor autor) {
-		try {
+		//verifica se o autor possui alguem livro vinculado
+		List<Livro> existeLivro = this.dao.verificaRemocaoAutor(autor.getId());
+		
+		if (existeLivro.size() == 0) {
 			this.dao.remove(autor);
 			mensagem = "Autor removido com sucesso";
 			tipoErro = FacesMessage.SEVERITY_INFO;
-		} catch (Exception e) {
-
+		} else {
 			mensagem = "Não é possível excluir autor com um livro vinculado";
 			tipoErro = FacesMessage.SEVERITY_ERROR;
 		}
-
-		context.addMessage(null, new FacesMessage(tipoErro, 
-				mensagem, ""));
-
-
+		context.addMessage(null, new FacesMessage(tipoErro, mensagem, ""));
 	}
 
 	public void carregaAutor(Autor autor) {

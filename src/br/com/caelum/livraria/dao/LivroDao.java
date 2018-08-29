@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import br.com.caelum.livraria.modelo.Livro;
+import br.com.caelum.livraria.modelo.Venda;
 import br.com.caelum.livraria.tx.Log;
 
 public class LivroDao implements Serializable {
@@ -46,5 +47,9 @@ public class LivroDao implements Serializable {
 	@Log
 	public Livro buscaPorId(Integer id) {
 		return dao.buscaPorId(id);
+	}
+
+	public List<Venda> verificaRemocaoLivro(Integer livroId) {
+		return this.dao.verifcaRemocaoLivro(livroId);
 	}
 }

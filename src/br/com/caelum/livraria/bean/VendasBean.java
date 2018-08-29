@@ -2,6 +2,8 @@ package br.com.caelum.livraria.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -13,22 +15,29 @@ import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 
+import br.com.caelum.livraria.dao.LivroDao;
 import br.com.caelum.livraria.dao.VendaDao;
+import br.com.caelum.livraria.modelo.Livro;
 import br.com.caelum.livraria.modelo.Venda;
 import br.com.caelum.livraria.tx.Transacional;
 
 /*@ManagedBean //Era usado para gerenciar pelo o JSF
 @ViewScoped*/
-@Named //usado para o CDI gerenciar o projeto
-@ViewScoped// Tag do pacote para o CDI javax.faces.view.ViewScoped
-public class VendasBean implements Serializable{
+@Named // usado para o CDI gerenciar o projeto
+@ViewScoped // Tag do pacote para o CDI javax.faces.view.ViewScoped
+public class VendasBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	private BarChartModel vendasModel;
-	
+
+	private Venda venda = new Venda();
 	@Inject
-	private VendaDao dao;
+	private VendaDao vendaDao;
+	@Inject
+	private LivroDao livroDao;
+	private List<Livro> livros;
+	private Integer livroId;
+	private BarChartModel vendasModel;
+	List<Venda> buscaVendas;
 
 	@PostConstruct
 	public void init() {
@@ -37,56 +46,81 @@ public class VendasBean implements Serializable{
 
 	private void createVendasModel() {
 		vendasModel = initVendasModel();
+		vendasModel.setAnimate(true);
+		vendasModel.setZoom(true);
 
-		vendasModel.setTitle("Vendas");
+//		vendasModel.setTitle("Vendas");
 		vendasModel.setLegendPosition("ne");
 
 		Axis xAxis = vendasModel.getAxis(AxisType.X);
 		xAxis.setLabel("Título");
-
 		Axis yAxis = vendasModel.getAxis(AxisType.Y);
 		yAxis.setLabel("Quantidade");
 		yAxis.setMin(0);
-		yAxis.setMax(500);
+		yAxis.setMax(1000);
 	}
 
 	private BarChartModel initVendasModel() {
 
 		BarChartModel model = new BarChartModel();
 
-		ChartSeries vendaSeries2015 = new ChartSeries();
-		List<Venda> vendas = getVendas(2016);
-		vendaSeries2015.setLabel("2016");
+		Set<Integer> buscaAno = buscaAno();
+		List<Livro> todosLivros = getLivros();
 
-		for (Venda venda : vendas) {
+		for (Integer ano : buscaAno) {
 
-			vendaSeries2015.set(venda.getLivro().getTitulo(), venda.getQuantidade());
+			ChartSeries vendaSeries = new ChartSeries();
 
+			List<Venda> vendas = buscaVendas(ano);
+			vendaSeries.setLabel(Integer.toString(ano));
+
+			for (Livro livro : todosLivros) {
+				vendaSeries.set(livro.getTitulo(), null);
+			}
+
+			for (Venda venda : vendas) {
+				vendaSeries.set(venda.getLivro().getTitulo(), venda.getQuantidade());
+			}
+
+			model.addSeries(vendaSeries);
 		}
-
-		model.addSeries(vendaSeries2015);
-
-		ChartSeries vendaSeries2016 = new ChartSeries();
-		vendas = getVendas(2017);
-		vendaSeries2016.setLabel("2017");
-
-		for (Venda venda : vendas) {
-
-			vendaSeries2016.set(venda.getLivro().getTitulo(), venda.getQuantidade());
-
-		}
-
-		model.addSeries(vendaSeries2016);
-
 		return model;
 	}
-	
+
 	@Transacional
-	public List<Venda> getVendas(Integer ano) {
-		
-		List<Venda> buscaVendas = this.dao.buscaVendas(ano);
-		
-		return buscaVendas;
+	public List<Venda> buscaVendas(Integer ano) {
+		this.buscaVendas = this.vendaDao.buscaVendas(ano);
+		return this.buscaVendas;
+	}
+
+	@Transacional
+	public Set<Integer> buscaAno() {
+		List<Integer> anos = vendaDao.buscaAno();
+		Set<Integer> anosSet = new TreeSet<Integer>(anos);
+		return anosSet;
+	}
+
+	@Transacional
+	public void gravarVenda() {
+		System.out.println("Gravando venda ");
+
+		Livro livro = this.livroDao.buscaPorId(livroId);
+		this.venda.setLivro(livro);
+		this.venda.setId(null);
+
+		vendaDao.adiciona(this.venda);
+
+		createVendasModel();
+	}
+
+	@Transacional
+	public List<Livro> getLivros() {
+		this.livros = livroDao.listaTodos();
+		return livros;
+	}
+
+	public void setLivros(List<Livro> livros) {
+		this.livros = livros;
 	}
 
 	public BarChartModel getVendasModel() {
@@ -95,6 +129,25 @@ public class VendasBean implements Serializable{
 
 	public void setVendasModel(BarChartModel vendasModel) {
 		this.vendasModel = vendasModel;
+	}
+
+	public Venda getVenda() {
+		return venda;
+	}
+
+	public void setVenda(Venda venda) {
+		this.venda = venda;
+	}
+
+	public Integer getLivroId() {
+		return livroId;
+	}
+
+	public void setLivroId(Integer livroId) {
+		this.livroId = livroId;
+	}
+	public List<Venda> getBuscaVendas() {
+		return buscaVendas;
 	}
 
 }

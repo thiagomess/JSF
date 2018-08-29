@@ -16,16 +16,26 @@ public class VendaDao implements Serializable {
 	
 	@Inject
 	private EntityManager em;
-	private DAO<Venda> dao;
+	private DAO<Venda> vendaDao;
 	
 	@PostConstruct
 	void init() {
-		this.dao = new DAO<Venda>(this.em, Venda.class);
+		this.vendaDao = new DAO<Venda>(this.em, Venda.class);
 	}
 	
 	@Log
 	public List<Venda> buscaVendas(Integer ano) {
-		return dao.buscaVendas(ano);
+		return vendaDao.buscaVendas(ano);
 	}
+
+	public void adiciona(Venda venda) {
+		this.vendaDao.adiciona(venda);
+		
+	}
+
+	public List<Integer> buscaAno() {
+		return this.vendaDao.buscaAno();
+	}
+	
 
 }

@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import br.com.caelum.livraria.modelo.Livro;
 import br.com.caelum.livraria.modelo.Venda;
 
 public class DAO<T> implements Serializable {
@@ -83,6 +84,24 @@ public class DAO<T> implements Serializable {
 		List<Venda> resultado = em.createQuery("select v from Venda v where v.ano = :pAno", Venda.class).setParameter("pAno", ano).getResultList();
 		
 		return resultado;
+	}
+
+	public List<Integer> buscaAno() {
+		List<Integer> resultList = em.createQuery("select v.ano from Venda v", Integer.class).getResultList();
+		
+		return resultList;
+	}
+
+	public List<Livro> verificaRemocaoAutor(Integer autorId) {
+		List<Livro> resultList = em.createQuery("select l from Livro l join l.autores a where a.id = :pAutorId ", Livro.class).setParameter("pAutorId", autorId).getResultList();
+
+		return resultList;
+	}
+
+	public List<Venda> verifcaRemocaoLivro(Integer livroId) {
+		List<Venda> resultList = em.createQuery("select v from Venda v join v.livro l where l.id = :pLivroId", Venda.class).setParameter("pLivroId", livroId).getResultList();
+		
+		return resultList;
 	}
 
 }

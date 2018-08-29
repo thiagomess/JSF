@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
@@ -17,6 +18,7 @@ import br.com.caelum.livraria.dao.AutorDao;
 import br.com.caelum.livraria.dao.LivroDao;
 import br.com.caelum.livraria.modelo.Autor;
 import br.com.caelum.livraria.modelo.Livro;
+import br.com.caelum.livraria.modelo.Venda;
 import br.com.caelum.livraria.tx.Transacional;
 
 /*@ManagedBean //Era usado para gerenciar pelo o JSF
@@ -38,6 +40,10 @@ public class LivroBean implements Serializable {
 	private List<Livro> livros;
 	@Inject
 	FacesContext context; // FacesContext agora é criado pela JsfUtil
+
+	private String mensagem;
+
+	private Severity tipoErro;
 	
 	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void carregarLivroPeloId() {
@@ -95,11 +101,21 @@ public class LivroBean implements Serializable {
 	// metodo para remover o livro
 	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void remover(Livro livro) {
-		System.out.println("Removendo livro: " + livro.getTitulo());
-		livroDao.remove(livro);
-		this.livros = livroDao.listaTodos();
+
+		List<Venda> existeVenda = this.livroDao.verificaRemocaoLivro(livro.getId());
+
+		if (existeVenda.size() == 0) {
+			livroDao.remove(livro);
+			mensagem = "Livro removido com sucesso";
+			tipoErro = FacesMessage.SEVERITY_INFO;
+			this.livros = livroDao.listaTodos();
+		} else {
+			mensagem = "Não é possível excluir Livro com uma venda vinculada";
+			tipoErro = FacesMessage.SEVERITY_ERROR;
+		}
+		context.addMessage(null, new FacesMessage(tipoErro, mensagem, ""));
 	}
-	
+
 	@Transacional // significa que este metodo esta vinculado a classe do pacote tx
 	public void gravarAutor() {
 		Autor autor = this.autorDao.buscaPorId(this.autorId);

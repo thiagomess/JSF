@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import br.com.caelum.livraria.modelo.Autor;
+import br.com.caelum.livraria.modelo.Livro;
 import br.com.caelum.livraria.tx.Log;
 
 public class AutorDao implements Serializable {
@@ -47,6 +48,10 @@ public class AutorDao implements Serializable {
 	@Log
 	public Autor buscaPorId(Integer id) {
 		return dao.buscaPorId(id);
+	}
+
+	public List<Livro> verificaRemocaoAutor(Integer autorId) {
+		return dao.verificaRemocaoAutor(autorId);
 	}
 
 

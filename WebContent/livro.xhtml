@@ -119,7 +119,7 @@
 
 					<p:column headerText="Preço" sortBy="#{livro.preco}" filterBy="#{livro.preco}" filterFunction="#{livroBean.precoEhMenor}" >
 						<h:outputText value="#{livro.preco}">
-							<f:convertNumber type="currenty" pattern="R$ 0.00"
+							<f:convertNumber type="currency" pattern="R$ 0.00"
 								currencySymbol="R$" locale="pt_BR" />
 						</h:outputText>
 					</p:column>
